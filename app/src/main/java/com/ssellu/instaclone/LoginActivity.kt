@@ -2,7 +2,6 @@ package com.ssellu.instaclone
 
 import android.content.Intent
 import android.os.Bundle
-import android.util.Log
 import android.view.View
 import android.widget.Button
 import android.widget.EditText
@@ -30,7 +29,7 @@ class LoginActivity : AppCompatActivity() {
 
 
     var auth: FirebaseAuth? = null
-    var googleSignInClient: GoogleSignInClient? = null /// TODO 0
+    var googleSignInClient: GoogleSignInClient? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -45,12 +44,12 @@ class LoginActivity : AppCompatActivity() {
 
 
         auth = FirebaseAuth.getInstance()
-        // TODO 2
+
         val gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
             .requestIdToken(getString(R.string.default_web_client_id))
             .requestEmail()
             .build()
-        // TODO 3
+
         googleSignInClient = GoogleSignIn.getClient(this, gso)
 
 
@@ -67,7 +66,7 @@ class LoginActivity : AppCompatActivity() {
         }
 
 
-        // TODO 5
+
         mGoogleButton.setOnClickListener {
             // step 1
             googleLogin()
@@ -75,13 +74,13 @@ class LoginActivity : AppCompatActivity() {
 
     }
 
-    // TODO 4
+
     private fun googleLogin() {
         val signInIntent = googleSignInClient?.signInIntent
         startActivityForResult(signInIntent, GOOGLE_LOGIN_CODE)
     }
 
-    // TODO 6
+
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
 
         super.onActivityResult(requestCode, resultCode, data)
@@ -96,7 +95,7 @@ class LoginActivity : AppCompatActivity() {
         }
     }
 
-    // TODO 7
+
     private fun firebaseAuthWithGoogle(account: GoogleSignInAccount?) {
 
         val credential = GoogleAuthProvider.getCredential(account?.idToken!!, null)
@@ -152,7 +151,7 @@ class LoginActivity : AppCompatActivity() {
     }
 
     private fun startMainActivity(user: FirebaseUser?) {
-        Log.d("aa", "user : " + user.toString()!!)
+
         if (user == null) {
             return
         }
@@ -162,6 +161,6 @@ class LoginActivity : AppCompatActivity() {
     }
 
     companion object {
-        private const val GOOGLE_LOGIN_CODE = 9001 /// TODO 1
+        private const val GOOGLE_LOGIN_CODE = 9001
     }
 }
