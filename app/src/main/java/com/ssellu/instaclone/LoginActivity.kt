@@ -40,8 +40,12 @@ class LoginActivity : AppCompatActivity() {
         auth = FirebaseAuth.getInstance()
 
         mLoginButton.setOnClickListener{
-
+            try {
             signInAndSignUp(mEmailEditText.text.toString(), mPasswordEditText.text.toString())
+            } catch (e : IllegalArgumentException){
+                Toast.makeText(this, "Your email and password cannot be empty.", Toast.LENGTH_SHORT).show()
+                mProgressBar.visibility = View.GONE
+            }
 
         }
 
@@ -50,7 +54,6 @@ class LoginActivity : AppCompatActivity() {
     private fun signInAndSignUp(email:String, password:String) {
         mProgressBar.visibility = View.VISIBLE
         auth?.createUserWithEmailAndPassword(email, password)?.addOnCompleteListener{
-
             try {
                 when {
                     it.isSuccessful -> startMainActivity()
