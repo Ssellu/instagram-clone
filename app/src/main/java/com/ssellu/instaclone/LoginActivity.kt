@@ -8,12 +8,19 @@ import android.widget.EditText
 import android.widget.ProgressBar
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import com.facebook.AccessToken
+import com.facebook.CallbackManager
+import com.facebook.FacebookCallback
+import com.facebook.FacebookException
+import com.facebook.login.LoginManager
+import com.facebook.login.LoginResult
 import com.google.android.gms.auth.api.Auth
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount
 import com.google.android.gms.auth.api.signin.GoogleSignInClient
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import com.google.android.material.floatingactionbutton.FloatingActionButton
+import com.google.firebase.auth.FacebookAuthProvider
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.auth.GoogleAuthProvider
@@ -30,6 +37,7 @@ class LoginActivity : AppCompatActivity() {
 
     var auth: FirebaseAuth? = null
     var googleSignInClient: GoogleSignInClient? = null
+    var callbackManager: CallbackManager? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -52,6 +60,7 @@ class LoginActivity : AppCompatActivity() {
 
         googleSignInClient = GoogleSignIn.getClient(this, gso)
 
+        callbackManager = CallbackManager.Factory.create()
 
 
         mLoginButton.setOnClickListener {
@@ -68,10 +77,55 @@ class LoginActivity : AppCompatActivity() {
 
 
         mGoogleButton.setOnClickListener {
-            // step 1
             googleLogin()
         }
 
+        mFacebookButton.setOnClickListener {
+            facebookLogin()
+        }
+
+    }
+
+    private fun facebookLogin() {
+        LoginManager.getInstance()
+            .logInWithReadPermissions(this, listOf("email", "public_profile"))
+
+        LoginManager.getInstance()
+            .registerCallback(callbackManager, object: FacebookCallback<LoginResult> {
+                override fun onSuccess(result: LoginResult?) {
+                    // facebook 계정 정보를 firebase 서버에게 전달(로그인)
+                    firebaseAuthWithFacebook(result?.accessToken)
+
+                }
+
+                override fun onCancel() {
+
+                }
+
+                override fun onError(error: FacebookException?) {
+
+                }
+            })
+    }
+
+    private fun firebaseAuthWithFacebook(accessToken: AccessToken?) {
+        // AccessToken 으로 Facebook 인증
+        val credential = FacebookAuthProvider.getCredential(accessToken?.token!!)
+
+        // 성공 시 Firebase 에 유저 정보 보내기 (로그인)
+        auth?.signInWithCredential(credential)
+            ?.addOnCompleteListener {
+                try {
+                    when {
+                        it.isSuccessful -> startMainActivity(it.result?.user)
+                        else -> throw Exception(it.exception!!.message)
+                    }
+                } catch (e: Exception) {
+                    Toast.makeText(this, e.message, Toast.LENGTH_SHORT).show()
+                }
+                mProgressBar.visibility = View.GONE
+
+            }
     }
 
 
@@ -88,8 +142,6 @@ class LoginActivity : AppCompatActivity() {
             val result = Auth.GoogleSignInApi.getSignInResultFromIntent(data)!!
             if (result.isSuccess) {
                 val account = result.signInAccount
-
-                // Step 2
                 firebaseAuthWithGoogle(account)
             }
         }
