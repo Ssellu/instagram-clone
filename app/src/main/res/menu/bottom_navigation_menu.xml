@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/action_home"
+        android:icon="@drawable/ic_home_solid"
+        android:title="@string/home"/>
+
+    <item
+        android:id="@+id/action_search"
+        android:icon="@drawable/ic_search_solid"
+        android:title="@string/search"/>
+
+    <item
+        android:id="@+id/action_add_photo"
+        android:icon="@drawable/ic_camera_solid"
+        android:title="@string/gallery"/>
+
+    <item
+        android:id="@+id/action_favorite_alarm"
+        android:icon="@drawable/ic_heart_border"
+        android:title="@string/favorite"/>
+    <item
+        android:id="@+id/action_account"
+        android:icon="@drawable/ic_user_circle_solid"
+        android:title="@string/account"/>
+
+</menu>
