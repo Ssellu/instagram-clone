@@ -97,7 +97,8 @@ class DetailViewFragment : Fragment() {
 
             }
         }
-        private fun toggleFavoriteImage(holder: DetailViewHolder, position: Int){
+
+        private fun toggleFavoriteImage(holder: DetailViewHolder, position: Int) {
             holder.favoriteImageView.setImageResource(
                 if (mContentList[position].favorites.containsKey(uid))
                     R.drawable.ic_heart_solid
@@ -105,6 +106,7 @@ class DetailViewFragment : Fragment() {
                     R.drawable.ic_heart_border
             )
         }
+
         private fun toggleFavorite(holder: DetailViewHolder, position: Int) {
             val tsDoc =
                 firestore?.collection(AddPhotoActivity.FIRESTORE_PATH)?.document(uidList[position])
@@ -125,9 +127,5 @@ class DetailViewFragment : Fragment() {
                 toggleFavoriteImage(holder, position)
             }
         }
-
-
     }
-
-
 }

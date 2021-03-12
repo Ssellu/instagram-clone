@@ -76,12 +76,14 @@ class AddPhotoActivity : AppCompatActivity() {
             storageRef.downloadUrl
         }?.addOnSuccessListener {  uri ->
             Toast.makeText(this, getString(R.string.upload_success), Toast.LENGTH_LONG).show()
-            val contentDto = ContentDto()
-            contentDto.imageUrl = uri.toString()
-            contentDto.uid = auth?.currentUser?.uid
-            contentDto.userId = auth?.currentUser?.email
-            contentDto.explain = mEditText.text.toString()
-            contentDto.timestamp = System.currentTimeMillis()
+            val contentDto = ContentDto().apply {
+                imageUrl = uri.toString()
+                uid = auth?.currentUser?.uid
+                userId = auth?.currentUser?.email
+                explain = mEditText.text.toString()
+                timestamp = System.currentTimeMillis()
+            }
+
             firestore?.collection("images")?.document()?.set(contentDto)
             setResult(Activity.RESULT_OK)
             finish()
