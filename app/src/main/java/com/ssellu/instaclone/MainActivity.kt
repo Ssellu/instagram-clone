@@ -26,6 +26,8 @@ class MainActivity : AppCompatActivity(), BottomNavigationView.OnNavigationItemS
         // Permissions
         ActivityCompat.requestPermissions(this, arrayOf(Manifest.permission.READ_EXTERNAL_STORAGE), 1)
 
+        // default fragment
+        bottomNavigationView.selectedItemId = R.id.action_home
     }
 
     private fun attachFragment(clazz:Class<out Fragment>){

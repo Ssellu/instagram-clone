@@ -23,8 +23,8 @@ import java.util.*
 class AddPhotoActivity : AppCompatActivity() {
 
     companion object {
-        private const val PICK_IMAGE_FROM_ALBUM = 0
-        private const val IMAGE_PATH = "images"
+        const val PICK_IMAGE_FROM_ALBUM = 0
+        const val IMAGE_PATH = "images"
     }
 
     private lateinit var mButton: Button
