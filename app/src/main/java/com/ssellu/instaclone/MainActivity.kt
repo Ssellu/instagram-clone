@@ -1,14 +1,16 @@
 package com.ssellu.instaclone
 
+import android.Manifest
+import android.content.Intent
+import android.content.pm.PackageManager
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.MenuItem
+import androidx.core.app.ActivityCompat
+import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import com.google.android.material.bottomnavigation.BottomNavigationView
-import com.ssellu.instaclone.navigation.AlarmFragment
-import com.ssellu.instaclone.navigation.DetailViewFragment
-import com.ssellu.instaclone.navigation.GridFragment
-import com.ssellu.instaclone.navigation.UserFragment
+import com.ssellu.instaclone.navigation.*
 
 class MainActivity : AppCompatActivity(), BottomNavigationView.OnNavigationItemSelectedListener {
 
@@ -20,6 +22,9 @@ class MainActivity : AppCompatActivity(), BottomNavigationView.OnNavigationItemS
 
         bottomNavigationView = findViewById(R.id.nav_bottom)
         bottomNavigationView.setOnNavigationItemSelectedListener(this)
+
+        // Permissions
+        ActivityCompat.requestPermissions(this, arrayOf(Manifest.permission.READ_EXTERNAL_STORAGE), 1)
 
     }
 
@@ -45,6 +50,10 @@ class MainActivity : AppCompatActivity(), BottomNavigationView.OnNavigationItemS
                 return true
             }
             R.id.action_add_photo ->{
+                // Checking permission
+                if(ContextCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED){
+                    startActivity(Intent(this, AddPhotoActivity::class.java))
+                }
                 return true
             }
             R.id.action_search ->{

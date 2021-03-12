@@ -47,8 +47,7 @@
             android:id="@+id/input_layout_email"
             style="@style/LoginTextInputLayoutStyle"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:theme="@style/LoginTextInputLayoutStyle">
+            android:layout_height="wrap_content">
 
             <EditText
                 android:id="@+id/et_email"
@@ -63,8 +62,7 @@
             android:id="@+id/input_layout_password"
             style="@style/LoginTextInputLayoutStyle"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:theme="@style/LoginTextInputLayoutStyle">
+            android:layout_height="wrap_content">
 
             <EditText
                 android:id="@+id/et_password"
