@@ -3,6 +3,7 @@ package com.ssellu.instaclone
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.MenuItem
+import androidx.fragment.app.Fragment
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.ssellu.instaclone.navigation.AlarmFragment
 import com.ssellu.instaclone.navigation.DetailViewFragment
@@ -22,40 +23,35 @@ class MainActivity : AppCompatActivity(), BottomNavigationView.OnNavigationItemS
 
     }
 
+    private fun attachFragment(clazz:Class<out Fragment>){
+        val fragment = clazz.newInstance()
+        supportFragmentManager.beginTransaction()
+            .replace(R.id.view_main, fragment)
+            .commit()
+    }
+
     override fun onNavigationItemSelected(item: MenuItem): Boolean {
         when(item.itemId){
             R.id.action_home ->{
-                val fragment = DetailViewFragment()
-                supportFragmentManager.beginTransaction()
-                    .replace(R.id.view_main, fragment)
-                    .commit()
+                attachFragment(DetailViewFragment::class.java)
                 return true
             }
             R.id.action_account ->{
-                val fragment = UserFragment()
-                supportFragmentManager.beginTransaction()
-                    .replace(R.id.view_main, fragment)
-                    .commit()
+                attachFragment(UserFragment::class.java)
                 return true
             }
             R.id.action_favorite_alarm ->{
-                val fragment = AlarmFragment()
-                supportFragmentManager.beginTransaction()
-                    .replace(R.id.view_main, fragment)
-                    .commit()
+                attachFragment(AlarmFragment::class.java)
                 return true
             }
             R.id.action_add_photo ->{
                 return true
             }
             R.id.action_search ->{
-                val fragment = GridFragment()
-                supportFragmentManager.beginTransaction()
-                    .replace(R.id.view_main, fragment)
-                    .commit()
+                attachFragment(GridFragment::class.java)
                 return true
             }
-        } // when
-        return false
+            else -> return false
+        }
     }
 }
