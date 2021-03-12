@@ -5,7 +5,6 @@ import android.content.Intent
 import android.net.Uri
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.util.Log
 import android.widget.Button
 import android.widget.EditText
 import android.widget.ImageView
@@ -24,7 +23,7 @@ class AddPhotoActivity : AppCompatActivity() {
 
     companion object {
         const val PICK_IMAGE_FROM_ALBUM = 0
-        const val IMAGE_PATH = "images"
+        const val FIRESTORE_PATH = "images"
     }
 
     private lateinit var mButton: Button
@@ -65,7 +64,7 @@ class AddPhotoActivity : AppCompatActivity() {
     private fun contentUpload() {
         val timeStamp = SimpleDateFormat("yyyyMMdd_HHmmss", Locale.getDefault()).format(Date())
         val imageFileName = "IMAGE_$timeStamp.png"
-        val storageRef = storage?.reference?.child(IMAGE_PATH)?.child(imageFileName)
+        val storageRef = storage?.reference?.child(FIRESTORE_PATH)?.child(imageFileName)
 
         // https://firebase.google.com/docs/storage/android/upload-files?hl=ko#kotlin+ktx
         storageRef?.putFile(photoUri!!)?.continueWithTask { task: Task<UploadTask.TaskSnapshot> ->
