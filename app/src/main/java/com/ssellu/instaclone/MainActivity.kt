@@ -10,6 +10,8 @@ import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import com.google.android.material.bottomnavigation.BottomNavigationView
+import com.google.firebase.auth.FirebaseAuth
+import com.ssellu.instaclone.general.Consts
 import com.ssellu.instaclone.navigation.*
 
 class MainActivity : AppCompatActivity(), BottomNavigationView.OnNavigationItemSelectedListener {
@@ -30,11 +32,17 @@ class MainActivity : AppCompatActivity(), BottomNavigationView.OnNavigationItemS
         bottomNavigationView.selectedItemId = R.id.action_home
     }
 
-    private fun attachFragment(clazz:Class<out Fragment>){
+    private fun attachFragment(clazz:Class<out Fragment>, bundle: Bundle?){
         val fragment = clazz.newInstance()
+        if(bundle != null){
+            fragment.arguments = bundle
+        }
         supportFragmentManager.beginTransaction()
             .replace(R.id.view_main, fragment)
             .commit()
+    }
+    private fun attachFragment(clazz:Class<out Fragment>){
+        attachFragment(clazz, null)
     }
 
     override fun onNavigationItemSelected(item: MenuItem): Boolean {
@@ -44,7 +52,10 @@ class MainActivity : AppCompatActivity(), BottomNavigationView.OnNavigationItemS
                 return true
             }
             R.id.action_account ->{
-                attachFragment(UserFragment::class.java)
+                val bundle = Bundle()
+                val uid = FirebaseAuth.getInstance().currentUser?.uid
+                bundle.putString(Consts.AUTHENTICATED_UID, uid)
+                attachFragment(UserFragment::class.java, bundle)
                 return true
             }
             R.id.action_favorite_alarm ->{
