@@ -12,7 +12,9 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
+import com.ssellu.instaclone.MainActivity
 import com.ssellu.instaclone.R
+import com.ssellu.instaclone.general.Constants
 import com.ssellu.instaclone.navigation.model.ContentDto
 
 class DetailViewFragment : Fragment() {
@@ -48,12 +50,15 @@ class DetailViewFragment : Fragment() {
         private val uidList: ArrayList<String> = ArrayList()
 
         init {
-            firestore?.collection(AddPhotoActivity.FIRESTORE_PATH)?.orderBy("timestamp")
+            firestore?.collection(Constants.FIRESTORE_PATH)?.orderBy("timestamp")
                 ?.addSnapshotListener { value, _ ->
                     mContentList.clear()
                     uidList.clear()
-
-                    value!!.documents.forEach {
+                    // TODO 9
+                    if (value == null){
+                        return@addSnapshotListener
+                    }
+                    value.documents.forEach {
                         uidList.add(it.id)
                         mContentList.add(it.toObject(ContentDto::class.java)!!)
                     }
@@ -90,10 +95,24 @@ class DetailViewFragment : Fragment() {
                     .into(mainImageView)
                 favoriteCountTextView.text = "Likes ${mContentList[position].favoriteCount}"
                 contentTextView.text = mContentList[position].explain
-                // TODO  Glide.with(itemView.context).load(mContentList[position].imageUrl).into(userImageView)
+                // Glide.with(itemView.context).load(mContentList[position].imageUrl).into(userImageView)
+                // TODO 6
+                userImageView.setOnClickListener {
+                    val bundle = Bundle()
+                    bundle.putString(
+                        Constants.TARGET_USER_UID_FOR_DETAIL_PAGE,
+                        mContentList[position].uid
+                    )
+                    bundle.putString(
+                        Constants.TARGET_USER_EMAIL_FOR_DETAIL_PAGE,
+                        mContentList[position].userId
+                    )
+                    (activity as MainActivity).attachFragment(UserFragment::class.java, bundle)
+                }
                 favoriteImageView.setOnClickListener { toggleFavorite(holder, position) }
 
                 toggleFavoriteImage(this, position)
+
 
             }
         }
@@ -109,7 +128,7 @@ class DetailViewFragment : Fragment() {
 
         private fun toggleFavorite(holder: DetailViewHolder, position: Int) {
             val tsDoc =
-                firestore?.collection(AddPhotoActivity.FIRESTORE_PATH)?.document(uidList[position])
+                firestore?.collection(Constants.FIRESTORE_PATH)?.document(uidList[position])
             firestore?.runTransaction {
 
                 val contentDto = it.get(tsDoc!!).toObject(ContentDto::class.java)
@@ -128,4 +147,6 @@ class DetailViewFragment : Fragment() {
             }
         }
     }
+
+
 }

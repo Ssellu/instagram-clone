@@ -15,6 +15,7 @@ import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.storage.FirebaseStorage
 import com.google.firebase.storage.UploadTask
 import com.ssellu.instaclone.R
+import com.ssellu.instaclone.general.Constants
 import com.ssellu.instaclone.navigation.model.ContentDto
 import java.text.SimpleDateFormat
 import java.util.*
@@ -23,7 +24,7 @@ class AddPhotoActivity : AppCompatActivity() {
 
     companion object {
         const val PICK_IMAGE_FROM_ALBUM = 0
-        const val FIRESTORE_PATH = "images"
+
     }
 
     private lateinit var mButton: Button
@@ -64,7 +65,7 @@ class AddPhotoActivity : AppCompatActivity() {
     private fun contentUpload() {
         val timeStamp = SimpleDateFormat("yyyyMMdd_HHmmss", Locale.getDefault()).format(Date())
         val imageFileName = "IMAGE_$timeStamp.png"
-        val storageRef = storage?.reference?.child(FIRESTORE_PATH)?.child(imageFileName)
+        val storageRef = storage?.reference?.child(Constants.FIRESTORE_PATH)?.child(imageFileName)
 
         // https://firebase.google.com/docs/storage/android/upload-files?hl=ko#kotlin+ktx
         storageRef?.putFile(photoUri!!)?.continueWithTask { task: Task<UploadTask.TaskSnapshot> ->

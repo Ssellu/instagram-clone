@@ -86,6 +86,11 @@ class LoginActivity : AppCompatActivity() {
 
     }
 
+    override fun onStart() {
+        super.onStart()
+        startMainActivity(auth?.currentUser)
+    }
+
     private fun facebookLogin() {
         LoginManager.getInstance()
             .logInWithReadPermissions(this, listOf("email", "public_profile"))

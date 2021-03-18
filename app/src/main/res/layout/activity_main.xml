@@ -13,18 +13,19 @@
         android:minHeight="?attr/actionBarSize"
         android:theme="?attr/actionBarTheme"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintStart_toStartOf="parent">
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
 
         <TextView
             android:id="@+id/tv_logo"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:fontFamily="@font/notosans_kr_medium"
+            android:gravity="center"
             android:text="@string/app_name"
             android:textColor="@color/black"
-            android:textSize="25sp"
-            android:gravity="center" />
+            android:textSize="25sp" />
 
     </androidx.appcompat.widget.Toolbar>
 
@@ -54,6 +55,19 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:menu="@menu/bottom_navigation_menu"/>
+    <!-- TODO 1 화살표, UserId -->
+    <ImageView
+        android:id="@+id/iv_back_to_login"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:tint="@color/black"
+        app:layout_constraintBottom_toBottomOf="@+id/toolbar"
+        app:layout_constraintStart_toStartOf="@+id/toolbar"
+        app:layout_constraintTop_toTopOf="parent"
+        android:visibility="gone"
+        app:srcCompat="@drawable/abc_vector_test" />
+
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

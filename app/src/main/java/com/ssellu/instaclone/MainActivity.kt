@@ -3,20 +3,26 @@ package com.ssellu.instaclone
 import android.Manifest
 import android.content.Intent
 import android.content.pm.PackageManager
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.MenuItem
+import android.view.View
+import android.widget.ImageView
+import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.firebase.auth.FirebaseAuth
-import com.ssellu.instaclone.general.Consts
+import com.ssellu.instaclone.general.Constants
 import com.ssellu.instaclone.navigation.*
 
 class MainActivity : AppCompatActivity(), BottomNavigationView.OnNavigationItemSelectedListener {
 
     lateinit var bottomNavigationView: BottomNavigationView
+
+    // TODO 2
+    lateinit var backImageView: ImageView
+    var firebaseAuth: FirebaseAuth? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -25,14 +31,31 @@ class MainActivity : AppCompatActivity(), BottomNavigationView.OnNavigationItemS
         bottomNavigationView = findViewById(R.id.nav_bottom)
         bottomNavigationView.setOnNavigationItemSelectedListener(this)
 
+        // TODO 3
+        firebaseAuth = FirebaseAuth.getInstance()
+        backImageView = findViewById(R.id.iv_back_to_login)
+        backImageView.setOnClickListener{
+
+        }
+
+
+
         // Permissions
         ActivityCompat.requestPermissions(this, arrayOf(Manifest.permission.READ_EXTERNAL_STORAGE), 1)
 
         // default fragment
         bottomNavigationView.selectedItemId = R.id.action_home
+
+        // TODO 9
+        setToolbarDefault()
     }
 
-    private fun attachFragment(clazz:Class<out Fragment>, bundle: Bundle?){
+    // TODO 8
+    fun setToolbarDefault(){
+        backImageView.visibility = View.GONE
+    }
+    // TODO 7
+    fun attachFragment(clazz:Class<out Fragment>, bundle: Bundle?){
         val fragment = clazz.newInstance()
         if(bundle != null){
             fragment.arguments = bundle
@@ -41,6 +64,8 @@ class MainActivity : AppCompatActivity(), BottomNavigationView.OnNavigationItemS
             .replace(R.id.view_main, fragment)
             .commit()
     }
+
+
     private fun attachFragment(clazz:Class<out Fragment>){
         attachFragment(clazz, null)
     }
@@ -54,7 +79,9 @@ class MainActivity : AppCompatActivity(), BottomNavigationView.OnNavigationItemS
             R.id.action_account ->{
                 val bundle = Bundle()
                 val uid = FirebaseAuth.getInstance().currentUser?.uid
-                bundle.putString(Consts.AUTHENTICATED_UID, uid)
+                val email = FirebaseAuth.getInstance().currentUser?.email
+                bundle.putString(Constants.TARGET_USER_EMAIL_FOR_DETAIL_PAGE, email)
+                bundle.putString(Constants.TARGET_USER_UID_FOR_DETAIL_PAGE, uid)
                 attachFragment(UserFragment::class.java, bundle)
                 return true
             }
