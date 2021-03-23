@@ -54,7 +54,6 @@ class DetailViewFragment : Fragment() {
                 ?.addSnapshotListener { value, _ ->
                     mContentList.clear()
                     uidList.clear()
-                    // TODO 9
                     if (value == null){
                         return@addSnapshotListener
                     }
@@ -96,7 +95,6 @@ class DetailViewFragment : Fragment() {
                 favoriteCountTextView.text = "Likes ${mContentList[position].favoriteCount}"
                 contentTextView.text = mContentList[position].explain
                 // Glide.with(itemView.context).load(mContentList[position].imageUrl).into(userImageView)
-                // TODO 6
                 userImageView.setOnClickListener {
                     val bundle = Bundle()
                     bundle.putString(

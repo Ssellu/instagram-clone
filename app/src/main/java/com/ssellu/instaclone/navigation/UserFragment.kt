@@ -39,7 +39,6 @@ class UserFragment : Fragment() {
     lateinit var followButton: TextView
     lateinit var userEmailTextView: TextView
 
-    // TODO 4
     var currentUid: String? = null
 
     override fun onCreateView(
@@ -47,7 +46,6 @@ class UserFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        // TODO
         targetUid = arguments?.getString(Constants.TARGET_USER_UID_FOR_DETAIL_PAGE)
         targetEmail = arguments?.getString(Constants.TARGET_USER_EMAIL_FOR_DETAIL_PAGE)
         firestore = FirebaseFirestore.getInstance()
@@ -65,7 +63,6 @@ class UserFragment : Fragment() {
         followingCountTextView = fragmentView.findViewById(R.id.tv_following_count)
 
         followButton = fragmentView.findViewById(R.id.btn_follow)
-        // TODO 11
         userEmailTextView = fragmentView.findViewById(R.id.tv_user_email_user)
 
         gridRecyclerView = fragmentView.findViewById(R.id.rv_grid)
@@ -75,11 +72,9 @@ class UserFragment : Fragment() {
 
 
 
-        // TODO 12
         userEmailTextView.text = targetEmail
 
 
-        // TODO 5
         val mainActivity = (activity as MainActivity).apply {
             userEmailTextView.visibility = View.VISIBLE
             backImageView.visibility = View.VISIBLE
@@ -152,7 +147,6 @@ class UserFragment : Fragment() {
         }
     }
 
-    // TODO 8-2
     override fun onDetach() {
         super.onDetach()
         (activity as MainActivity).setToolbarDefault()

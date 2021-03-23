@@ -20,7 +20,6 @@ class MainActivity : AppCompatActivity(), BottomNavigationView.OnNavigationItemS
 
     lateinit var bottomNavigationView: BottomNavigationView
 
-    // TODO 2
     lateinit var backImageView: ImageView
     var firebaseAuth: FirebaseAuth? = null
 
@@ -31,7 +30,6 @@ class MainActivity : AppCompatActivity(), BottomNavigationView.OnNavigationItemS
         bottomNavigationView = findViewById(R.id.nav_bottom)
         bottomNavigationView.setOnNavigationItemSelectedListener(this)
 
-        // TODO 3
         firebaseAuth = FirebaseAuth.getInstance()
         backImageView = findViewById(R.id.iv_back_to_login)
         backImageView.setOnClickListener{
@@ -46,15 +44,12 @@ class MainActivity : AppCompatActivity(), BottomNavigationView.OnNavigationItemS
         // default fragment
         bottomNavigationView.selectedItemId = R.id.action_home
 
-        // TODO 9
         setToolbarDefault()
     }
 
-    // TODO 8
     fun setToolbarDefault(){
         backImageView.visibility = View.GONE
     }
-    // TODO 7
     fun attachFragment(clazz:Class<out Fragment>, bundle: Bundle?){
         val fragment = clazz.newInstance()
         if(bundle != null){

@@ -55,7 +55,6 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:menu="@menu/bottom_navigation_menu"/>
-    <!-- TODO 1 화살표, UserId -->
     <ImageView
         android:id="@+id/iv_back_to_login"
         android:layout_width="wrap_content"
