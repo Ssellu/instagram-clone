@@ -1,5 +1,6 @@
 package com.ssellu.instaclone.navigation
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -12,6 +13,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
+import com.ssellu.instaclone.CommentActivity
 import com.ssellu.instaclone.MainActivity
 import com.ssellu.instaclone.R
 import com.ssellu.instaclone.general.Constants
@@ -109,6 +111,12 @@ class DetailViewFragment : Fragment() {
                 }
                 favoriteImageView.setOnClickListener { toggleFavorite(holder, position) }
 
+                // TODO 3
+                commentImageView.setOnClickListener{
+                    val intent = Intent(it.context, CommentActivity::class.java)
+                    intent.putExtra(Constants.CONTENT_UID, mContentList[position].uid)
+                    startActivity(intent)
+                }
                 toggleFavoriteImage(this, position)
 
 

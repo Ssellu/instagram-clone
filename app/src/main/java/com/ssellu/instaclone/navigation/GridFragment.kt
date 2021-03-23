@@ -28,7 +28,6 @@ class GridFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        // TODO 3
         fragment = LayoutInflater.from(activity).inflate(R.layout.fragment_grid, container, false)
         firestore = FirebaseFirestore.getInstance()
         recyclerView = fragment?.findViewById(R.id.rv_grid)!!
@@ -37,7 +36,6 @@ class GridFragment : Fragment() {
         return fragment
     }
 
-    // TODO 2 GridFragmentRecyclerViewAdapter
     inner class GridFragmentRecyclerViewAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
         private val contentDtoList: ArrayList<ContentDto> = arrayListOf()
