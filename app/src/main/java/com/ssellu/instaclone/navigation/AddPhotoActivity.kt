@@ -85,7 +85,7 @@ class AddPhotoActivity : AppCompatActivity() {
                 timestamp = System.currentTimeMillis()
             }
 
-            firestore?.collection("images")?.document()?.set(contentDto)
+            firestore?.collection(Constants.FIRESTORE_PATH)?.document()?.set(contentDto)
             setResult(Activity.RESULT_OK)
             finish()
         }?.addOnFailureListener{

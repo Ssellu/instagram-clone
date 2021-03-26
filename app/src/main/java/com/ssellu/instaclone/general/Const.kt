@@ -10,6 +10,7 @@ interface Constants {
         const val FIRESTORE_PATH = "images"
         const val FIRESTORE_COMMENT_PATH = "comments"
         const val FIRESTORE_PROFILE_IMAGE_PATH = "profile_images"
+        const val FIRESTORE_PROFILE_IMAGE_COLUMN = "image"
         const val CONTENT_UID = "content_uid"
     }
 

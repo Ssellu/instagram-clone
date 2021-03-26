@@ -2,6 +2,7 @@ package com.ssellu.instaclone.navigation
 
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -11,6 +12,7 @@ import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
+import com.bumptech.glide.request.RequestOptions
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.ssellu.instaclone.CommentActivity
@@ -52,6 +54,8 @@ class DetailViewFragment : Fragment() {
         private val uidList: ArrayList<String> = ArrayList()
 
         init {
+            mContentList.clear()
+            uidList.clear()
             firestore?.collection(Constants.FIRESTORE_PATH)?.orderBy("timestamp")
                 ?.addSnapshotListener { value, _ ->
                     mContentList.clear()
@@ -95,7 +99,19 @@ class DetailViewFragment : Fragment() {
                     .into(mainImageView)
                 favoriteCountTextView.text = "Likes ${mContentList[position].favoriteCount}"
                 contentTextView.text = mContentList[position].explain
-                // Glide.with(itemView.context).load(mContentList[position].imageUrl).into(userImageView)
+
+                // TODO 5 유저 프로필 가져오기
+                firestore?.collection(Constants.FIRESTORE_PROFILE_IMAGE_PATH)?.document(mContentList[position].uid!!)
+                    ?.addSnapshotListener { value, _ ->
+                        if (value != null || value?.data != null) {
+                            val profileImageUrl = value.data?.get(Constants.FIRESTORE_PROFILE_IMAGE_COLUMN)
+                            Log.d("MY", "image : $profileImageUrl")
+                            Glide.with(activity!!).load(profileImageUrl ?: R.drawable.ic_user_circle_solid)
+                                .apply(RequestOptions().circleCrop())
+                                .into(userImageView)
+                        }
+                    }
+
                 userImageView.setOnClickListener {
                     val bundle = Bundle()
                     bundle.putString(
@@ -110,7 +126,6 @@ class DetailViewFragment : Fragment() {
                 }
                 favoriteImageView.setOnClickListener { toggleFavorite(holder, position) }
 
-                // TODO 3
                 commentImageView.setOnClickListener{
                     val intent = Intent(it.context, CommentActivity::class.java)
                     intent.putExtra(Constants.CONTENT_UID, uidList[position])

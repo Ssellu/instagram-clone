@@ -1,5 +1,6 @@
 package com.ssellu.instaclone.navigation
 
+import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
@@ -16,6 +17,7 @@ import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.storage.FirebaseStorage
 import com.ssellu.instaclone.LoginActivity
 import com.ssellu.instaclone.MainActivity
 import com.ssellu.instaclone.R
@@ -24,6 +26,10 @@ import com.ssellu.instaclone.navigation.model.ContentDto
 
 class UserFragment : Fragment() {
 
+    // TODO 1
+    companion object {
+        const val PICK_PHOTO = 1
+    }
 
     private lateinit var fragmentView: View
     private var firestore: FirebaseFirestore? = null
@@ -63,17 +69,13 @@ class UserFragment : Fragment() {
         followingCountTextView = fragmentView.findViewById(R.id.tv_following_count)
 
         followButton = fragmentView.findViewById(R.id.btn_follow)
+
         userEmailTextView = fragmentView.findViewById(R.id.tv_user_email_user)
+        userEmailTextView.text = targetEmail
 
         gridRecyclerView = fragmentView.findViewById(R.id.rv_grid)
         gridRecyclerView.layoutManager = GridLayoutManager(activity, 3)
         gridRecyclerView.adapter = UserFragmentRecyclerViewAdapter()
-
-
-
-
-        userEmailTextView.text = targetEmail
-
 
         val mainActivity = (activity as MainActivity).apply {
             userEmailTextView.visibility = View.VISIBLE
@@ -99,8 +101,15 @@ class UserFragment : Fragment() {
                 }
             }
         }
-        //////////////////////////////////////////
 
+        // TODO 2
+        userImageView.setOnClickListener {
+            val photoPickerIntent = Intent(Intent.ACTION_PICK)
+            photoPickerIntent.type = "image/*"
+            startActivityForResult(photoPickerIntent, PICK_PHOTO)
+        }
+        // TODO 4
+        getProfileImage()
         return fragmentView
     }
 
@@ -150,5 +159,46 @@ class UserFragment : Fragment() {
     override fun onDetach() {
         super.onDetach()
         (activity as MainActivity).setToolbarDefault()
+    }
+
+
+    // TODO 3
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        //super.onActivityResult(requestCode, resultCode, data)
+        if (requestCode != PICK_PHOTO || resultCode != Activity.RESULT_OK)
+            return
+        val imageUri = data?.data
+        val uid = FirebaseAuth.getInstance().currentUser?.uid
+        with(
+            FirebaseStorage.getInstance().reference
+                .child(Constants.FIRESTORE_PROFILE_IMAGE_COLUMN)
+                .child(uid!!)
+        ) {
+            putFile(imageUri!!).continueWithTask {
+                return@continueWithTask this.downloadUrl
+            }.addOnSuccessListener {
+                val map = HashMap<String, Any>()
+                map["image"] = it.toString()
+                FirebaseFirestore.getInstance()
+                    .collection(Constants.FIRESTORE_PROFILE_IMAGE_PATH).document(uid)
+                    .set(map)
+                getProfileImage()
+            }
+        }
+
+
+    }
+
+    // TODO 4
+    private fun getProfileImage() {
+        firestore?.collection(Constants.FIRESTORE_PROFILE_IMAGE_PATH)?.document(currentUid!!)
+            ?.addSnapshotListener { value, _ ->
+                if (value != null || value?.data != null) {
+                    val profileImageUrl = value.data?.get(Constants.FIRESTORE_PROFILE_IMAGE_COLUMN)
+                    Glide.with(activity!!).load(profileImageUrl ?: R.drawable.ic_user_circle_solid)
+                        .apply(RequestOptions().circleCrop())
+                        .into(this.userImageView)
+                }
+            }
     }
 }

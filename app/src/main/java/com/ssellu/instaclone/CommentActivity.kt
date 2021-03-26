@@ -20,7 +20,6 @@ import com.ssellu.instaclone.general.Constants
 import com.ssellu.instaclone.general.hideSoftKeyboard
 import com.ssellu.instaclone.navigation.model.ContentDto
 
-// TODO 2
 class CommentActivity : AppCompatActivity() {
 
     private var contentUid: String? = null
@@ -62,18 +61,9 @@ class CommentActivity : AppCompatActivity() {
             reverseLayout = true
         }
 
-
-//        commentMessageEditText.setOnTouchListener { _, _ ->
-//            true.apply {
-//
-//                with(commentRecyclerView) { scrollToPosition(adapter?.itemCount!! - 1) }
-//            }
-//        }
     }
 
 
-    // TODO 4 - Firebase 확인해보기
-    // TODO 5 - 댓글 목록 만들기
     inner class CommentRecyclerViewAdapter :
         RecyclerView.Adapter<CommentRecyclerViewAdapter.CommentViewHolder>() {
 
@@ -119,9 +109,7 @@ class CommentActivity : AppCompatActivity() {
                         )
                             .apply(RequestOptions().circleCrop()).into(holder.profileImageView)
                     }
-
                 }
-
         }
 
         inner class CommentViewHolder(v: View) : RecyclerView.ViewHolder(v) {

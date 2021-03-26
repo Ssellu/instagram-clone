@@ -41,12 +41,12 @@ class GridFragment : Fragment() {
         private val contentDtoList: ArrayList<ContentDto> = arrayListOf()
 
         init {
+            contentDtoList.clear()
             firestore?.collection(Constants.FIRESTORE_PATH)?.addSnapshotListener { value, _ ->
                 if (value == null) return@addSnapshotListener
                 value.forEach {
                     contentDtoList.add(it.toObject(ContentDto::class.java))
                 }
-                Log.d("my", "$contentDtoList")
                 notifyDataSetChanged()
             }
         }
