@@ -1,5 +1,6 @@
 package com.ssellu.instaclone.general
 
+
 interface Constants {
     companion object {
 
@@ -11,4 +12,7 @@ interface Constants {
         const val FIRESTORE_PROFILE_IMAGE_PATH = "profile_images"
         const val CONTENT_UID = "content_uid"
     }
+
+
 }
+

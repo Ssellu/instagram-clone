@@ -1,5 +1,6 @@
 package com.ssellu.instaclone
 
+import android.annotation.SuppressLint
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -16,6 +17,7 @@ import com.bumptech.glide.request.RequestOptions
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.ssellu.instaclone.general.Constants
+import com.ssellu.instaclone.general.hideSoftKeyboard
 import com.ssellu.instaclone.navigation.model.ContentDto
 
 // TODO 2
@@ -27,13 +29,16 @@ class CommentActivity : AppCompatActivity() {
     private lateinit var commentSubmitButton: Button
     private lateinit var commentRecyclerView: RecyclerView
 
+    @SuppressLint("ClickableViewAccessibility")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_comment)
 
+
+
         contentUid = intent.getStringExtra(Constants.CONTENT_UID)
 
-        commentMessageEditText = findViewById(R.id.tv_comment)
+        commentMessageEditText = findViewById(R.id.et_comment_message)
         commentRecyclerView = findViewById(R.id.rv_comment)
         commentSubmitButton = findViewById(R.id.btn_comment_submit)
 
@@ -48,13 +53,24 @@ class CommentActivity : AppCompatActivity() {
                 .collection(Constants.FIRESTORE_PATH).document(contentUid!!)
                 .collection(Constants.FIRESTORE_COMMENT_PATH).document().set(comment)
             commentMessageEditText.setText("")
-
+            hideSoftKeyboard()
         }
 
         commentRecyclerView.adapter = CommentRecyclerViewAdapter()
-        commentRecyclerView.layoutManager = LinearLayoutManager(this)
+        commentRecyclerView.layoutManager = LinearLayoutManager(this).apply {
+            stackFromEnd = true
+            reverseLayout = true
+        }
 
+
+//        commentMessageEditText.setOnTouchListener { _, _ ->
+//            true.apply {
+//
+//                with(commentRecyclerView) { scrollToPosition(adapter?.itemCount!! - 1) }
+//            }
+//        }
     }
+
 
     // TODO 4 - Firebase 확인해보기
     // TODO 5 - 댓글 목록 만들기
@@ -96,10 +112,12 @@ class CommentActivity : AppCompatActivity() {
                 .collection(Constants.FIRESTORE_PROFILE_IMAGE_PATH)
                 .document(mCommentList[position].uid!!)
                 .get()
-                .addOnCompleteListener{
-                    if(it.isSuccessful){
-                        val url = it.result!!["image"]
-                        Glide.with(holder.itemView.context).load(url).apply(RequestOptions().circleCrop()).into(holder.profileImageView)
+                .addOnCompleteListener {
+                    if (it.isSuccessful) {
+                        Glide.with(holder.itemView.context).load(
+                            it.result!!["image"] ?: R.drawable.ic_user_circle_solid
+                        )
+                            .apply(RequestOptions().circleCrop()).into(holder.profileImageView)
                     }
 
                 }

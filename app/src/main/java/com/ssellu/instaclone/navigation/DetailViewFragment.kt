@@ -63,7 +63,6 @@ class DetailViewFragment : Fragment() {
                         uidList.add(it.id)
                         mContentList.add(it.toObject(ContentDto::class.java)!!)
                     }
-
                     notifyDataSetChanged()
                 }
         }
@@ -114,7 +113,7 @@ class DetailViewFragment : Fragment() {
                 // TODO 3
                 commentImageView.setOnClickListener{
                     val intent = Intent(it.context, CommentActivity::class.java)
-                    intent.putExtra(Constants.CONTENT_UID, mContentList[position].uid)
+                    intent.putExtra(Constants.CONTENT_UID, uidList[position])
                     startActivity(intent)
                 }
                 toggleFavoriteImage(this, position)
