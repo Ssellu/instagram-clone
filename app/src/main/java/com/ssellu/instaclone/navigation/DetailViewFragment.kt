@@ -20,6 +20,7 @@ import com.ssellu.instaclone.MainActivity
 import com.ssellu.instaclone.R
 import com.ssellu.instaclone.general.Constants
 import com.ssellu.instaclone.navigation.model.ContentDto
+import com.ssellu.instaclone.navigation.model.NotificationDto
 
 class DetailViewFragment : Fragment() {
 
@@ -100,7 +101,7 @@ class DetailViewFragment : Fragment() {
                 favoriteCountTextView.text = "Likes ${mContentList[position].favoriteCount}"
                 contentTextView.text = mContentList[position].explain
 
-                // TODO 5 유저 프로필 가져오기
+
                 firestore?.collection(Constants.FIRESTORE_PROFILE_IMAGE_PATH)?.document(mContentList[position].uid!!)
                     ?.addSnapshotListener { value, _ ->
                         if (value != null || value?.data != null) {
@@ -129,6 +130,11 @@ class DetailViewFragment : Fragment() {
                 commentImageView.setOnClickListener{
                     val intent = Intent(it.context, CommentActivity::class.java)
                     intent.putExtra(Constants.CONTENT_UID, uidList[position])
+
+                    // TODO 9
+                    intent.putExtra(Constants.DESTINATION_UID, mContentList[position].uid)
+                    //////////////////////////////////////
+
                     startActivity(intent)
                 }
                 toggleFavoriteImage(this, position)
@@ -160,12 +166,28 @@ class DetailViewFragment : Fragment() {
                 } else {
                     contentDto.favorites[uid!!] = true
                     contentDto.favoriteCount += 1
+
+                    // TODO 4
+                    favoriteNotification(mContentList[position].uid!!)
                 }
                 it.set(tsDoc, contentDto)
             }?.addOnSuccessListener {
                 toggleFavoriteImage(holder, position)
             }
         }
+
+        // TODO 3
+        private fun favoriteNotification(destinationUid:String){
+            val dto = NotificationDto(
+                destinationUid = destinationUid,
+                userId = FirebaseAuth.getInstance().currentUser?.email,
+                uid = FirebaseAuth.getInstance().currentUser?.uid,
+                type = 0,
+                timestamp = System.currentTimeMillis()
+            )
+            FirebaseFirestore.getInstance().collection(Constants.NOTIFICATION_PATH).document().set(dto)
+        }
+
     }
 
 

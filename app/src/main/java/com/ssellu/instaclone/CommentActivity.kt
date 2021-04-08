@@ -2,6 +2,7 @@ package com.ssellu.instaclone
 
 import android.annotation.SuppressLint
 import android.os.Bundle
+import android.os.Message
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -19,9 +20,11 @@ import com.google.firebase.firestore.FirebaseFirestore
 import com.ssellu.instaclone.general.Constants
 import com.ssellu.instaclone.general.hideSoftKeyboard
 import com.ssellu.instaclone.navigation.model.ContentDto
+import com.ssellu.instaclone.navigation.model.NotificationDto
 
 class CommentActivity : AppCompatActivity() {
-
+    // TODO 7
+    private var destinationUid: String? = null
     private var contentUid: String? = null
 
     private lateinit var commentMessageEditText: EditText
@@ -33,7 +36,9 @@ class CommentActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_comment)
 
-
+        // TODO 8
+        destinationUid = intent.getStringExtra(Constants.DESTINATION_UID)
+        ///////////////////////////////////////////
 
         contentUid = intent.getStringExtra(Constants.CONTENT_UID)
 
@@ -51,6 +56,11 @@ class CommentActivity : AppCompatActivity() {
             FirebaseFirestore.getInstance()
                 .collection(Constants.FIRESTORE_PATH).document(contentUid!!)
                 .collection(Constants.FIRESTORE_COMMENT_PATH).document().set(comment)
+
+            // TODO 6
+            commentNotification(destinationUid!!, commentMessageEditText.text.toString())
+            ///////////////////////////////////////////
+
             commentMessageEditText.setText("")
             hideSoftKeyboard()
         }
@@ -117,5 +127,19 @@ class CommentActivity : AppCompatActivity() {
             var commentTextView: TextView = v.findViewById(R.id.tv_comment)
             var profileImageView: ImageView = v.findViewById(R.id.iv_profile)
         }
+    }
+
+    // TODO 5
+    private fun commentNotification(destinationUid: String, message: String) {
+        val dto = NotificationDto(
+            destinationUid = destinationUid,
+            userId = FirebaseAuth.getInstance().currentUser?.email,
+            uid = FirebaseAuth.getInstance().currentUser?.uid,
+            type = 0,
+            timestamp = System.currentTimeMillis(),
+            message = message
+        )
+        FirebaseFirestore.getInstance().collection(Constants.NOTIFICATION_PATH).document()
+            .set(dto)
     }
 }

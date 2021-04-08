@@ -12,6 +12,10 @@ interface Constants {
         const val FIRESTORE_PROFILE_IMAGE_PATH = "profile_images"
         const val FIRESTORE_PROFILE_IMAGE_COLUMN = "image"
         const val CONTENT_UID = "content_uid"
+
+        // TODO 2
+        const val NOTIFICATION_PATH = "notifications"
+        const val DESTINATION_UID = "destination_uid"
     }
 
 

@@ -23,10 +23,10 @@ import com.ssellu.instaclone.MainActivity
 import com.ssellu.instaclone.R
 import com.ssellu.instaclone.general.Constants
 import com.ssellu.instaclone.navigation.model.ContentDto
+import com.ssellu.instaclone.navigation.model.NotificationDto
 
 class UserFragment : Fragment() {
 
-    // TODO 1
     companion object {
         const val PICK_PHOTO = 1
     }
@@ -93,7 +93,7 @@ class UserFragment : Fragment() {
                 startActivity(Intent(activity, LoginActivity::class.java))
                 auth?.signOut()
             }
-        } else { // opens page of the other
+        } else { // opens page of the others
             followButton.let {
                 it.text = getString(R.string.follow)  // follow
                 it.setOnClickListener {
@@ -102,13 +102,11 @@ class UserFragment : Fragment() {
             }
         }
 
-        // TODO 2
         userImageView.setOnClickListener {
             val photoPickerIntent = Intent(Intent.ACTION_PICK)
             photoPickerIntent.type = "image/*"
             startActivityForResult(photoPickerIntent, PICK_PHOTO)
         }
-        // TODO 4
         getProfileImage()
         return fragmentView
     }
@@ -161,8 +159,6 @@ class UserFragment : Fragment() {
         (activity as MainActivity).setToolbarDefault()
     }
 
-
-    // TODO 3
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         //super.onActivityResult(requestCode, resultCode, data)
         if (requestCode != PICK_PHOTO || resultCode != Activity.RESULT_OK)
@@ -189,7 +185,6 @@ class UserFragment : Fragment() {
 
     }
 
-    // TODO 4
     private fun getProfileImage() {
         firestore?.collection(Constants.FIRESTORE_PROFILE_IMAGE_PATH)?.document(currentUid!!)
             ?.addSnapshotListener { value, _ ->
@@ -200,5 +195,17 @@ class UserFragment : Fragment() {
                         .into(this.userImageView)
                 }
             }
+    }
+
+    // TODO 10
+    private fun followerNotification(destinationUid:String){
+        val dto = NotificationDto(
+            destinationUid = destinationUid,
+            userId = FirebaseAuth.getInstance().currentUser?.email,
+            uid = FirebaseAuth.getInstance().currentUser?.uid,
+            type = 2,
+            timestamp = System.currentTimeMillis()
+        )
+        FirebaseFirestore.getInstance().collection(Constants.NOTIFICATION_PATH).document().set(dto)
     }
 }
