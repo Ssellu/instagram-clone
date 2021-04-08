@@ -2,7 +2,6 @@ package com.ssellu.instaclone
 
 import android.annotation.SuppressLint
 import android.os.Bundle
-import android.os.Message
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -23,7 +22,6 @@ import com.ssellu.instaclone.navigation.model.ContentDto
 import com.ssellu.instaclone.navigation.model.NotificationDto
 
 class CommentActivity : AppCompatActivity() {
-    // TODO 7
     private var destinationUid: String? = null
     private var contentUid: String? = null
 
@@ -36,7 +34,6 @@ class CommentActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_comment)
 
-        // TODO 8
         destinationUid = intent.getStringExtra(Constants.DESTINATION_UID)
         ///////////////////////////////////////////
 
@@ -57,7 +54,6 @@ class CommentActivity : AppCompatActivity() {
                 .collection(Constants.FIRESTORE_PATH).document(contentUid!!)
                 .collection(Constants.FIRESTORE_COMMENT_PATH).document().set(comment)
 
-            // TODO 6
             commentNotification(destinationUid!!, commentMessageEditText.text.toString())
             ///////////////////////////////////////////
 
@@ -129,7 +125,6 @@ class CommentActivity : AppCompatActivity() {
         }
     }
 
-    // TODO 5
     private fun commentNotification(destinationUid: String, message: String) {
         val dto = NotificationDto(
             destinationUid = destinationUid,
@@ -139,7 +134,7 @@ class CommentActivity : AppCompatActivity() {
             timestamp = System.currentTimeMillis(),
             message = message
         )
-        FirebaseFirestore.getInstance().collection(Constants.NOTIFICATION_PATH).document()
+        FirebaseFirestore.getInstance().collection(Constants.FIRESTORE_NOTIFICATION_PATH).document()
             .set(dto)
     }
 }

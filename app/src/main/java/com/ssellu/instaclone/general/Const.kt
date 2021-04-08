@@ -4,6 +4,7 @@ package com.ssellu.instaclone.general
 interface Constants {
     companion object {
 
+        const val FIRESTORE_USERS_PATH = "users"
         const val TARGET_USER_EMAIL_FOR_DETAIL_PAGE = "user_email"
         const val AUTHENTICATED_UID = "uid"
         const val TARGET_USER_UID_FOR_DETAIL_PAGE = "target_uid"
@@ -13,8 +14,7 @@ interface Constants {
         const val FIRESTORE_PROFILE_IMAGE_COLUMN = "image"
         const val CONTENT_UID = "content_uid"
 
-        // TODO 2
-        const val NOTIFICATION_PATH = "notifications"
+        const val FIRESTORE_NOTIFICATION_PATH = "notifications"
         const val DESTINATION_UID = "destination_uid"
     }
 

@@ -131,7 +131,6 @@ class DetailViewFragment : Fragment() {
                     val intent = Intent(it.context, CommentActivity::class.java)
                     intent.putExtra(Constants.CONTENT_UID, uidList[position])
 
-                    // TODO 9
                     intent.putExtra(Constants.DESTINATION_UID, mContentList[position].uid)
                     //////////////////////////////////////
 
@@ -167,7 +166,6 @@ class DetailViewFragment : Fragment() {
                     contentDto.favorites[uid!!] = true
                     contentDto.favoriteCount += 1
 
-                    // TODO 4
                     favoriteNotification(mContentList[position].uid!!)
                 }
                 it.set(tsDoc, contentDto)
@@ -176,7 +174,6 @@ class DetailViewFragment : Fragment() {
             }
         }
 
-        // TODO 3
         private fun favoriteNotification(destinationUid:String){
             val dto = NotificationDto(
                 destinationUid = destinationUid,
@@ -185,7 +182,7 @@ class DetailViewFragment : Fragment() {
                 type = 0,
                 timestamp = System.currentTimeMillis()
             )
-            FirebaseFirestore.getInstance().collection(Constants.NOTIFICATION_PATH).document().set(dto)
+            FirebaseFirestore.getInstance().collection(Constants.FIRESTORE_NOTIFICATION_PATH).document().set(dto)
         }
 
     }

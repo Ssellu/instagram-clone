@@ -23,6 +23,7 @@ import com.ssellu.instaclone.MainActivity
 import com.ssellu.instaclone.R
 import com.ssellu.instaclone.general.Constants
 import com.ssellu.instaclone.navigation.model.ContentDto
+import com.ssellu.instaclone.navigation.model.FollowDto
 import com.ssellu.instaclone.navigation.model.NotificationDto
 
 class UserFragment : Fragment() {
@@ -97,8 +98,10 @@ class UserFragment : Fragment() {
             followButton.let {
                 it.text = getString(R.string.follow)  // follow
                 it.setOnClickListener {
-                    mainActivity.bottomNavigationView.selectedItemId = R.id.action_home
+                    // TODO 3
+                    requestFollow()
                 }
+
             }
         }
 
@@ -107,6 +110,8 @@ class UserFragment : Fragment() {
             photoPickerIntent.type = "image/*"
             startActivityForResult(photoPickerIntent, PICK_PHOTO)
         }
+
+
         getProfileImage()
         return fragmentView
     }
@@ -197,7 +202,6 @@ class UserFragment : Fragment() {
             }
     }
 
-    // TODO 10
     private fun followerNotification(destinationUid:String){
         val dto = NotificationDto(
             destinationUid = destinationUid,
@@ -206,6 +210,58 @@ class UserFragment : Fragment() {
             type = 2,
             timestamp = System.currentTimeMillis()
         )
-        FirebaseFirestore.getInstance().collection(Constants.NOTIFICATION_PATH).document().set(dto)
+        FirebaseFirestore.getInstance().collection(Constants.FIRESTORE_NOTIFICATION_PATH).document().set(dto)
+    }
+
+    // TODO 2
+    private fun requestFollow(){
+        Log.d("MY", "target : $targetUid, current : $currentUid")
+        val txDocTargetUser = firestore?.collection(Constants.FIRESTORE_USERS_PATH)?.document(targetUid!!)
+        firestore?.runTransaction{transaction ->
+            var followDto = transaction.get(txDocTargetUser!!).toObject(FollowDto::class.java)
+            if(followDto == null){
+                followDto = FollowDto().apply {
+                    followers[currentUid!!] = true
+                }
+            }
+
+            else {
+                with(followDto) {
+
+                    if (followers.containsKey(currentUid!!)) {
+                        followers.remove(currentUid!!)
+                    } else {
+                        followers[currentUid!!] = true
+                    }
+                }
+            }
+            transaction.set(txDocTargetUser, followDto)
+            return@runTransaction
+
+        }
+
+        val txDocCurrentUser = firestore?.collection(Constants.FIRESTORE_USERS_PATH)?.document(currentUid!!)
+        firestore?.runTransaction{ transaction ->
+            var followDto0 = transaction.get(txDocCurrentUser!!).toObject(FollowDto::class.java)
+            if(followDto0 == null){
+                followDto0 = FollowDto().apply {
+                    followings[targetUid!!] = true
+                }
+            }
+            else {
+                with(followDto0) {
+
+                    if (followings.containsKey(targetUid!!)) {
+                        followings.remove(targetUid!!)
+                    } else {
+                        followings[targetUid!!] = true
+                    }
+                }
+            }
+            transaction.set(txDocCurrentUser, followDto0)
+            return@runTransaction
+
+        }
+
     }
 }
